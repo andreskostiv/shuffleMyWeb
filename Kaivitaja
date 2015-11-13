@@ -1,0 +1,14 @@
+package shuffleMyWeb;
+
+public class Kaivitaja {
+
+    public static void main(String[] args) {
+
+
+       Generaator a = new Generaator(); // lõin uue "a" objekti
+
+        a.rakendus(); // a objektil käivitan "rakendus" meetodi
+
+
+    }
+}
