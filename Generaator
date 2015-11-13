@@ -1,0 +1,21 @@
+package shuffleMyWeb;
+
+public class Generaator { // Klass generaator
+
+    void rakendus() { // Klassis on Meentod rakendus mille ülesanne on massiivist suvalisi veebilehti väljastada
+
+        String[] viisLehte = { // massiiv
+                "www.delfi.ee",
+                "www.postimees.ee",
+                "www.epl.ee",
+                "www.oleht.ee",
+                "www.paraveeb.ee"
+        };
+
+
+        double suvaline = Math.random() * 5;
+        int uusNumber = (int) suvaline;
+
+        System.out.println(viisLehte[uusNumber]);
+    }
+}
