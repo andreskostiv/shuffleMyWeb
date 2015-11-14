@@ -2,6 +2,11 @@
 
 ANdres kostiv ja Kaia Ernits
 
+DUMMY prototüüp:https://docs.google.com/presentation/d/1s2zZeWre-DWCFE9bCOsMEi8besGLz21FatPfxao716Q/edit?usp=sharing<br>
+UML PROTOTÜÜBI FLOW:https://docs.google.com/presentation/d/1Wt5yPYKkdu7Ni_VkmDYtRmFmBmq3_DCf96rx_61Yd9c/edit?usp=sharing<br>
+Projektiplaan:https://docs.google.com/spreadsheets/d/19jZUahf8eckD_sirkIReB5N4m-pyHF-FJQ-W3umz-lY/edit?usp=sharing<br>
+<br>
+ALGORITM:<br>
 OBJEKT 1<br>
 1.	Valik, kas minna lehitsema, settingutesse või välja<br>
 1.1 Kui lehitsema “GO”, siis liigud edasi lehitsejasse<br>
