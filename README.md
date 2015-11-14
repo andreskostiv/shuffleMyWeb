@@ -32,8 +32,8 @@ uus väli
 2.4 Tühista ja algusesse. Ei salvesta andmebaasi muudatusi ja liigub vaatesse 1.
 
 CHECKLIST:
-Kood
-Kood on gitis, õppejõud saab ligi.
+Kood <br>
+Kood on gitis, õppejõud saab ligi.<br>
 Projekti kirjeldus failis README.md (.md on [markdown](http://eherrera.net/markdowntutorial/))
 Nimi
 Projekti kirjeldus
