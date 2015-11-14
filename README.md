@@ -30,3 +30,52 @@ uus väli
 2.3.1 Teeb olemasolevas vaates veebilehtede nimekirjast koopia andmebaasi
 2.3.2 Liigub algusesse vaatesse 1.
 2.4 Tühista ja algusesse. Ei salvesta andmebaasi muudatusi ja liigub vaatesse 1.
+
+CHECKLIST:
+Kood
+Kood on gitis, õppejõud saab ligi.
+Projekti kirjeldus failis README.md (.md on [markdown](http://eherrera.net/markdowntutorial/))
+Nimi
+Projekti kirjeldus
+Kasutusjuhend
+Muud märkmed
+Võõras kood on allikale viidatud
+Lihtne lugeda
+treppimine on paigas
+muutuja nimetused kirjeldavad protsessi olemust
+meetodide nimetused kirjeldavad selgelt meetodi toimingut
+selguse tagamiseks on koodi kommenteeritud
+Loogiline ja taaskasutatav ülesehitus
+kasutab meetode kus vaja
+kasutab klasse kus vaja
+kasutab objekt-orienteeritust
+kasutatakse otstarbekalt tsükleid
+kasutatakse andmestruktuure ja käideldakse neid otstarbekalt
+Kood on kompaktne (lisapunktid, kui on näha erilist läbimõeldust)
+keerulised tsüklid
+rekursioon
+eriti hea klasside/meetodide taaskasutatavus
+Tulemus
+funktsionaalsus
+programm täidab oma eesmärki, ehk suudab ettenähtud protsessi lõpuni viia
+kasutatavus
+GUI olemasolu (v.a. juhul kui sellest pole üldse kasu)
+bugid ei takista protsessi
+kasutajaliides on läbi mõeldud
+kasutaja ei pea üleliigseid klikke tegema
+kasutajal on lihtne mõista, kuidas programmi kasutada.
+Programm on vastupidav
+Tavakasutajale
+Dumbuserile
+Algaja-häkkerile
+Lisapunkte
+Tudeng on läinud aine raamistikust edasi, ehk oskab rohkem kui on aines õpetatud.
+Tudeng on reaalselt gitti kasutanud (committide periood on loogiline)
+Kasutatud on lisa raamistikke, näiteks SQL andmebaas.
+Kui tudeng tööga päris valmis ei saanud, kas ta vähemalt teab mida järgmiseks peaks tegema?
+Plagiaadikontroll
+(Rakendada ainult kui väga vaja, eksam on lõplik filter)
+
+Oskab selgitada suvalist kohta koodis.
+Oskab programmi käiku muuta, kui õppejõud seda palub.
+Oskab käigu pealt tsükleid valmistada.
