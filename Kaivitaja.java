@@ -1,5 +1,7 @@
 package shuffleMyWeb;
 
+// See käivitab programmi
+
 public class Kaivitaja {
 
     public static void main(String[] args) {
@@ -7,7 +9,9 @@ public class Kaivitaja {
 
        Generaator a = new Generaator(); // lõin uue "a" objekti
 
-        a.rakendus(); // a objektil käivitan "rakendus" meetodi
+        a.Algus();
+
+
 
 
     }
