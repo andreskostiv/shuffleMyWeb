@@ -1,38 +1,209 @@
 package shuffleMyWeb;
 
+import java.sql.*;
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 
 public class Generaator { // Klass generaator
 
 
+    void AndmeSisetus() {
+        for (int sisestusValik = 0; sisestusValik < 2; sisestusValik = sisestusValik) {
+
+            Scanner sc = new Scanner(System.in);
+            System.out.println();
+            System.out.println("Kirjuta ID number millist lehte soovid lisada");
+            System.out.println("NB! see ei tohi olla juba olemasolev ID");
+            String inputId = sc.nextLine();
+            System.out.println();
+            System.out.println("Kirjuta veebiaadress kujul: www.neti.ee");
+            String inputUrl = sc.nextLine();
+
+
+            Connection c = null;
+            Statement stmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:shuffle.db");
+            c.setAutoCommit(false);
+            System.out.println("Andmebaasiga edukalt ühendatud");
+
+            stmt = c.createStatement();
+            String sql = "INSERT INTO DATABASE (ID, URL) " +
+                    "VALUES (" + inputId + "," + "'http://" + inputUrl + "'" + ")";
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+            c.commit();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        System.out.println("Veebileht " + inputUrl + " edukalt sisestatud");
+
+            System.out.println();
+            System.out.println("Valikud: 1-Lisa järgmine leht 2-Mine tagasi seadetesse"); // küsime valiku
+            System.out.println();
+            Scanner sc2 = new Scanner(System.in);
+            sisestusValik = sc.nextInt(); //valiku suunamine 2 stsenaariumiga
+            switch (sisestusValik) {
+                case 1:
+                    sisestusValik=1;
+                    AndmeKuvamine();
+                    break;
+                case 2:
+                    sisestusValik=2;
+                    Settingud();
+                    break;
+            }
+
+
+
+        }
+
+    }
+
+    void AndmeKuvamine(){
+        {
+            System.out.println("Veebilehe ID ja tema veebiaadress:");
+
+            Connection c = null;
+            Statement stmt = null;
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection("jdbc:sqlite:shuffle.db");
+                c.setAutoCommit(false);
+                System.out.println("Opened database successfully");
+
+                stmt = c.createStatement();
+                ResultSet rs = stmt.executeQuery( "SELECT * FROM DATABASE;" );
+                while ( rs.next() ) {
+                    int id = rs.getInt("id");
+                    String url = rs.getString("url");
+
+                    System.out.println( "ID = " + id );
+                    System.out.println( "URL = " + url );
+
+                    System.out.println();
+                }
+                rs.close();
+                stmt.close();
+                c.close();
+            } catch ( Exception e ) {
+                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+                System.exit(0);
+            }
+            System.out.println("Operation done successfully");
+        }
+
+
+    }
+
+    void AndmeKustutamine(){
+
+        for (int kustutusValik = 0; kustutusValik < 2; kustutusValik = kustutusValik) {
+
+            Scanner sc = new Scanner(System.in);
+            System.out.println();
+            System.out.println("Kirjuta ID number millist lehte soovid kustustada");
+            String whatId = sc.nextLine();
+
+            Connection c = null;
+            Statement stmt = null;
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection("jdbc:sqlite:shuffle.db");
+                c.setAutoCommit(false);
+                System.out.println("Andmebaasiga edukalt ühendatud");
+
+                stmt = c.createStatement();
+                String sql = "DELETE from DATABASE where ID=" + whatId;
+                stmt.executeUpdate(sql);
+                c.commit();
+
+                ResultSet rs = stmt.executeQuery("SELECT * FROM DATABASE;");
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String url = rs.getString("url");
+
+                    System.out.println("ID = " + id);
+                    System.out.println("NAME = " + url);
+
+                    System.out.println();
+                }
+                rs.close();
+                stmt.close();
+                c.close();
+            } catch (Exception e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                System.exit(0);
+            }
+            System.out.println();
+            System.out.println("Leht number "+whatId+" edukalt kustutatud");
+
+            System.out.println("Valikud: 1-Kustuta järgmine leht 2-Mine tagasi Settingutesse"); // küsime valiku
+            System.out.println();
+            Scanner sc3 = new Scanner(System.in);
+            kustutusValik = sc.nextInt(); //valiku suunamine 2 stsenaariumiga
+            switch (kustutusValik) {
+                case 1:
+                    kustutusValik=1;
+                    AndmeKuvamine();
+                    break;
+                case 2:
+                    kustutusValik=2;
+                    Settingud();
+                    break;
+            }
+
+
+
+
+
+        }
+    }
+
     void rakendus() { // Klassis on Meetod rakendus mille ülesanne on massiivist suvalisi veebilehti väljastada
+
         System.out.println("Siin kuvatakse sulle suvalises järjekorras veebilehti");
         System.out.println();
 
         for (int valikRakendus = 0; valikRakendus < 2  ; valikRakendus = valikRakendus ) {
 
-            //siin meetodis arvutatakse suvaline number nullist neljani, mida kasutame viiekohalises massiivis
-            Andmebaas A = new Andmebaas();
+           /* SELECT column FROM table
+            ORDER BY RANDOM()
+            LIMIT 1*/
 
-                String [] viisLehteUus = A.Nimekiri();
+            Connection c = null;
+            Statement stmt = null;
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection("jdbc:sqlite:shuffle.db");
+                c.setAutoCommit(false);
+                System.out.println("Andmebaasiga edukalt ühendus loodud");
 
-                double suvaline = Math.random() * 4;
-                int uusNumber = (int) suvaline;
+                stmt = c.createStatement();
+                ResultSet rs = stmt.executeQuery( "SELECT URL FROM DATABASE ORDER BY RANDOM() LIMIT 1;" );
 
-                // kutsub ühe elemendi massiivist viisLehte[]
-                System.out.println();
-                System.out.println(viisLehteUus[uusNumber]);
 
-            /*
-            public static void main(String[] args){
+                while ( rs.next() ) {
+                    String url = rs.getString("url");
 
-            String[] res = listPages();
-            //now we want to print the element one: www.cnn.com
+                    System.out.println( "Vaata näiteks seda lehte: " + url );
 
-            System.out.println(res[0]);
-}
-             */
-
+                    System.out.println();
+                }
+                rs.close();
+                stmt.close();
+                c.close();
+            } catch ( Exception e ) {
+                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+                System.exit(0);
+            }
+            System.out.println("Operation done successfully");
 
 
             // küsime valiku
@@ -86,26 +257,35 @@ public class Generaator { // Klass generaator
     void Settingud() {
         /*  Valik kas kas lisada- või kustutada veebilehti, katkestada
         ja minna algusesse või salvestada ja minna algusesse */
+
+
         Scanner sc = new Scanner(System.in);
         System.out.println();
         System.out.println("Oled settingutes");
+        System.out.println("Salvestatud veebilehed");
+        System.out.println();
+        AndmeKuvamine();
+        System.out.println();
+
         System.out.println("Palun kirjuta valik:");
-        System.out.println("1-lisada veebilehti; 2-kustutada veebilehti; 3-salvestada ja minna algusesse");
-        System.out.println("4-katkestada ja minna algusesse");
+        System.out.println("1-lisada veebilehti; 2-kustutada veebilehti; 3-katkestada ja minna algusesse");
         int valitud = sc.nextInt();
         System.out.printf("Sinu valik on %d", valitud);
         System.out.println();
         switch (valitud) {
             case 1:
                 System.out.println("järgmisena lisan veebilehti");
+                System.out.println();
+                AndmeKuvamine();
+                AndmeSisetus();
                 break;
             case 2:
                 System.out.println("järgmisena kustutan veebilehti");
+                System.out.println();
+                AndmeKuvamine();
+                AndmeKustutamine();
                 break;
             case 3:
-                System.out.println("järgmisena salvestan ja lähen algusesse");
-                break;
-            case 4:
                 Algus();
                 break;
 
@@ -113,7 +293,7 @@ public class Generaator { // Klass generaator
     }
 
     void Valju(){
-        System.out.println("väljutud");
+        System.out.println("programmist väljutud");
 
     }
 
