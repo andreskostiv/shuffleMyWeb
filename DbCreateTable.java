@@ -14,13 +14,12 @@ public class DbCreateTable
         Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:shuffle.db");
+            c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
             String sql = "CREATE TABLE DATABASE " +
-                    "(ID INT PRIMARY KEY     NOT NULL," +
-                    " URL           TEXT    NOT NULL)";
+                    "(URL TEXT PRIMARY KEY   NOT NULL)";
 
 
 

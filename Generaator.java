@@ -14,10 +14,6 @@ public class Generaator { // Klass generaator
 
             Scanner sc = new Scanner(System.in);
             System.out.println();
-            System.out.println("Kirjuta ID number millist lehte soovid lisada");
-            System.out.println("NB! see ei tohi olla juba olemasolev ID");
-            String inputId = sc.nextLine();
-            System.out.println();
             System.out.println("Kirjuta veebiaadress kujul: www.neti.ee");
             String inputUrl = sc.nextLine();
 
@@ -26,13 +22,13 @@ public class Generaator { // Klass generaator
             Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:shuffle.db");
+            c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
             c.setAutoCommit(false);
             System.out.println("Andmebaasiga edukalt ühendatud");
 
             stmt = c.createStatement();
-            String sql = "INSERT INTO DATABASE (ID, URL) " +
-                    "VALUES (" + inputId + "," + "'http://" + inputUrl + "'" + ")";
+            String sql = "INSERT INTO DATABASE (URL) " +
+                    "VALUES ("+ "'http://" + inputUrl + "'" + ")";
             stmt.executeUpdate(sql);
 
             stmt.close();
@@ -68,23 +64,24 @@ public class Generaator { // Klass generaator
 
     void AndmeKuvamine(){
         {
-            System.out.println("Veebilehe ID ja tema veebiaadress:");
+            System.out.println("Salvestatud veebiaadressid:");
 
             Connection c = null;
             Statement stmt = null;
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection("jdbc:sqlite:shuffle.db");
+                c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
                 c.setAutoCommit(false);
                 System.out.println("Opened database successfully");
 
                 stmt = c.createStatement();
-                ResultSet rs = stmt.executeQuery( "SELECT * FROM DATABASE;" );
+                ResultSet rs = stmt.executeQuery( "SELECT rowid, url FROM DATABASE;" );
                 while ( rs.next() ) {
-                    int id = rs.getInt("id");
-                    String url = rs.getString("url");
 
-                    System.out.println( "ID = " + id );
+                    String rowid = toString();
+                    rowid = rs.getString("rowid");
+                    String url = rs.getString("url");
+                    System.out.println( "ID = " + rowid );
                     System.out.println( "URL = " + url );
 
                     System.out.println();
@@ -115,21 +112,22 @@ public class Generaator { // Klass generaator
             Statement stmt = null;
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection("jdbc:sqlite:shuffle.db");
+                c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
                 c.setAutoCommit(false);
                 System.out.println("Andmebaasiga edukalt ühendatud");
 
                 stmt = c.createStatement();
-                String sql = "DELETE from DATABASE where ID=" + whatId;
+                String sql = "DELETE from DATABASE where rowid=" + whatId;
                 stmt.executeUpdate(sql);
                 c.commit();
 
-                ResultSet rs = stmt.executeQuery("SELECT * FROM DATABASE;");
+                ResultSet rs = stmt.executeQuery("SELECT rowid, url FROM DATABASE;");
                 while (rs.next()) {
-                    int id = rs.getInt("id");
+                    String rowid = toString();
+                    rowid = rs.getString("rowid");
                     String url = rs.getString("url");
 
-                    System.out.println("ID = " + id);
+                    System.out.println("ID = " + rowid);
                     System.out.println("NAME = " + url);
 
                     System.out.println();
@@ -181,7 +179,7 @@ public class Generaator { // Klass generaator
             Statement stmt = null;
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection("jdbc:sqlite:shuffle.db");
+                c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
                 c.setAutoCommit(false);
                 System.out.println("Andmebaasiga edukalt ühendus loodud");
 
