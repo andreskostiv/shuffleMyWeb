@@ -9,6 +9,132 @@ import java.sql.Statement;
 public class Generaator { // Klass generaator
 
 
+    void Algus() {
+        //1.	Valik, kas minna lehitsema, settingutesse või välja
+        Scanner sc = new Scanner(System.in);
+        System.out.println();
+        System.out.println("Oled alguses");
+        System.out.println("palun kirjuta valik:");
+        System.out.println("1-lehitsema; 2-settingutesse; 3-välja");
+        int valitud = sc.nextInt();
+        System.out.printf("Sinu valik on %d", valitud);
+        System.out.println();
+        switch (valitud){
+            case 1:
+                rakendus();
+                break;
+            case 2:
+                Settingud();
+                break;
+            case 3:
+                System.out.println("järgmisena väljun programmist");
+                break;
+
+        }
+
+    }
+
+    void Settingud() {
+        /*  Valik kas kas lisada- või kustutada veebilehti, katkestada
+        ja minna algusesse või salvestada ja minna algusesse */
+
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println();
+        System.out.println("Oled settingutes");
+        System.out.println("Salvestatud veebilehed");
+        System.out.println();
+        AndmeKuvamine();
+        System.out.println();
+
+        System.out.println("Palun kirjuta valik:");
+        System.out.println("1-lisada veebilehti; 2-kustutada veebilehti; 3-katkestada ja minna algusesse");
+        int valitud = sc.nextInt();
+        System.out.printf("Sinu valik on %d", valitud);
+        System.out.println();
+        switch (valitud) {
+            case 1:
+                System.out.println("järgmisena lisan veebilehti");
+                System.out.println();
+                AndmeKuvamine();
+                AndmeSisetus();
+                break;
+            case 2:
+                System.out.println("järgmisena kustutan veebilehti");
+                System.out.println();
+                AndmeKuvamine();
+                AndmeKustutamine();
+                break;
+            case 3:
+                Algus();
+                break;
+
+        }
+    }
+
+    void rakendus() { // Klassis on Meetod rakendus mille ülesanne on massiivist suvalisi veebilehti väljastada
+
+        System.out.println("Siin kuvatakse sulle suvalises järjekorras veebilehti");
+        System.out.println();
+
+        for (int valikRakendus = 0; valikRakendus < 2  ; valikRakendus = valikRakendus ) {
+
+           /* SELECT column FROM table
+            ORDER BY RANDOM()
+            LIMIT 1*/
+
+            Connection c = null;
+            Statement stmt = null;
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                c.setAutoCommit(false);
+                System.out.println("Andmebaasiga edukalt ühendus loodud");
+
+                stmt = c.createStatement();
+                ResultSet rs = stmt.executeQuery( "SELECT URL FROM DATABASE ORDER BY RANDOM() LIMIT 1;" );
+
+
+                while ( rs.next() ) {
+                    String url = rs.getString("url");
+
+                    System.out.println( "Vaata näiteks seda lehte: " + url );
+
+                    System.out.println();
+                }
+                rs.close();
+                stmt.close();
+                c.close();
+            } catch ( Exception e ) {
+                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+                System.exit(0);
+            }
+            System.out.println("Operation done successfully");
+
+
+            // küsime valiku
+            System.out.println("Valikud: 1-Paku järgmine 2-Mine Algusesse 3-Välju programmist");
+            System.out.println();
+            Scanner sc = new Scanner(System.in);
+            valikRakendus = sc.nextInt();
+            //valiku suunamine 3 stsenaariumiga
+            switch (valikRakendus) {
+                case 1:
+                    valikRakendus=1;
+                    break;
+                case 2:
+                    valikRakendus=2;
+                    Algus();
+                    break;
+                case 3:
+                    valikRakendus=3;
+                    Valju();
+                    break;
+            }
+
+        }
+    }
+
     void AndmeSisetus() {
         for (int sisestusValik = 0; sisestusValik < 2; sisestusValik = sisestusValik) {
 
@@ -160,132 +286,6 @@ public class Generaator { // Klass generaator
 
 
 
-
-        }
-    }
-
-    void rakendus() { // Klassis on Meetod rakendus mille ülesanne on massiivist suvalisi veebilehti väljastada
-
-        System.out.println("Siin kuvatakse sulle suvalises järjekorras veebilehti");
-        System.out.println();
-
-        for (int valikRakendus = 0; valikRakendus < 2  ; valikRakendus = valikRakendus ) {
-
-           /* SELECT column FROM table
-            ORDER BY RANDOM()
-            LIMIT 1*/
-
-            Connection c = null;
-            Statement stmt = null;
-            try {
-                Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
-                c.setAutoCommit(false);
-                System.out.println("Andmebaasiga edukalt ühendus loodud");
-
-                stmt = c.createStatement();
-                ResultSet rs = stmt.executeQuery( "SELECT URL FROM DATABASE ORDER BY RANDOM() LIMIT 1;" );
-
-
-                while ( rs.next() ) {
-                    String url = rs.getString("url");
-
-                    System.out.println( "Vaata näiteks seda lehte: " + url );
-
-                    System.out.println();
-                }
-                rs.close();
-                stmt.close();
-                c.close();
-            } catch ( Exception e ) {
-                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-                System.exit(0);
-            }
-            System.out.println("Operation done successfully");
-
-
-            // küsime valiku
-            System.out.println("Valikud: 1-Paku järgmine 2-Mine Algusesse 3-Välju programmist");
-            System.out.println();
-            Scanner sc = new Scanner(System.in);
-            valikRakendus = sc.nextInt();
-            //valiku suunamine 3 stsenaariumiga
-            switch (valikRakendus) {
-                case 1:
-                    valikRakendus=1;
-                    break;
-                case 2:
-                    valikRakendus=2;
-                    Algus();
-                    break;
-                case 3:
-                    valikRakendus=3;
-                    Valju();
-                    break;
-            }
-
-        }
-    }
-
-    void Algus() {
-        //1.	Valik, kas minna lehitsema, settingutesse või välja
-        Scanner sc = new Scanner(System.in);
-        System.out.println();
-        System.out.println("Oled alguses");
-        System.out.println("palun kirjuta valik:");
-        System.out.println("1-lehitsema; 2-settingutesse; 3-välja");
-        int valitud = sc.nextInt();
-        System.out.printf("Sinu valik on %d", valitud);
-        System.out.println();
-        switch (valitud){
-            case 1:
-                rakendus();
-                break;
-            case 2:
-                Settingud();
-                break;
-            case 3:
-                System.out.println("järgmisena väljun programmist");
-                break;
-
-        }
-
-    }
-
-    void Settingud() {
-        /*  Valik kas kas lisada- või kustutada veebilehti, katkestada
-        ja minna algusesse või salvestada ja minna algusesse */
-
-
-        Scanner sc = new Scanner(System.in);
-        System.out.println();
-        System.out.println("Oled settingutes");
-        System.out.println("Salvestatud veebilehed");
-        System.out.println();
-        AndmeKuvamine();
-        System.out.println();
-
-        System.out.println("Palun kirjuta valik:");
-        System.out.println("1-lisada veebilehti; 2-kustutada veebilehti; 3-katkestada ja minna algusesse");
-        int valitud = sc.nextInt();
-        System.out.printf("Sinu valik on %d", valitud);
-        System.out.println();
-        switch (valitud) {
-            case 1:
-                System.out.println("järgmisena lisan veebilehti");
-                System.out.println();
-                AndmeKuvamine();
-                AndmeSisetus();
-                break;
-            case 2:
-                System.out.println("järgmisena kustutan veebilehti");
-                System.out.println();
-                AndmeKuvamine();
-                AndmeKustutamine();
-                break;
-            case 3:
-                Algus();
-                break;
 
         }
     }
