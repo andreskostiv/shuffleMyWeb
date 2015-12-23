@@ -1,5 +1,10 @@
 package shuffleMyWeb;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
 import java.sql.*;
 import java.util.Scanner;
 import java.sql.Connection;
@@ -9,7 +14,15 @@ import java.sql.Statement;
 public class Generaator { // Klass generaator
 
 
+
+
+
+    void RakenduseAken(){
+
+    }
+
     void Algus() {
+
         //1.	Valik, kas minna lehitsema, settingutesse või välja
         Scanner sc = new Scanner(System.in);
         System.out.println();
@@ -292,6 +305,11 @@ public class Generaator { // Klass generaator
 
     void Valju(){
         System.out.println("programmist väljutud");
+    }
+
+    private void setupStage(){
+        Stage = new Stage();
+        S
 
     }
 
