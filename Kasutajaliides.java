@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -13,6 +12,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class Kasutajaliides extends Application{
 
@@ -24,22 +28,23 @@ public class Kasutajaliides extends Application{
     public  void start(final Stage primaryStage){
         primaryStage.setTitle("ShuffleMyWeb");
 
-        Group groupAlgus = new Group(); //Algus
-        Group groupSeaded = new Group(); //Seaded
-        Group groupValjutud = new Group(); //Väljutud
+        // UI ruudustikud, samad sõnad jätkuvad alam node'des
+        GridPane gridAlgus = new GridPane(); // Avakuva
+        GridPane gridSeaded = new GridPane(); // Seaded
+        GridPane gridValjutud = new GridPane(); // Väljutud
 
-        final Scene sceneAlgus = new Scene (groupAlgus, 600 , 500);
-        final Scene sceneSeaded = new Scene (groupSeaded, 600 , 500);
-        final Scene sceneValjutud = new Scene (groupValjutud, 600 , 500);
+        // Stseeni suuruse ja UI ruudustiku sidumine
+        final Scene sceneAlgus = new Scene (gridAlgus, 600 , 500);
+        final Scene sceneSeaded = new Scene (gridSeaded, 600 , 500);
+        final Scene sceneValjutud = new Scene (gridValjutud, 600 , 500);
+
 
 
         //VAADE1: ALGUSE JAOKS:
-        GridPane gridAlgus = new GridPane();
         gridAlgus.setAlignment(Pos.CENTER);
         gridAlgus.setHgap(10);
         gridAlgus.setVgap(10);
         gridAlgus.setPadding(new Insets(25, 25, 25, 25));
-        groupAlgus.getChildren().addAll(gridAlgus);
 
         //button Valju
         Button valjuBtn = new Button ("Välju");
@@ -48,27 +53,51 @@ public class Kasutajaliides extends Application{
             }
         });
         HBox valjuHbox = new HBox(10);
-        valjuHbox.setAlignment(Pos.TOP_RIGHT);
+        valjuHbox.setAlignment(Pos.TOP_LEFT);
         valjuHbox.getChildren().add(valjuBtn);
         gridAlgus.add(valjuHbox, 1,0);
 
-        //tekst intro
+
+        //Tekst intro
         Text introText = new Text ( " See rakendus pakub sulle suvalises järjekorras sinu " +
                 "lemmikutesse salvestatud veebilehti.");
-        gridAlgus.add(introText, 0, 2, 2, 1);
+        gridAlgus.add(introText, 1, 2, 2, 1);
 
-        //veebiaadress ning nupp "Paku veel"
-        Button pakuVeelBtn = new Button ("Paku veel");
-        final Text pakutudLehtText = new Text("http://www.delfi.ee");
-        pakuVeelBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+        //Nupp "Paku Lehti" ja all tekst URL
+        Button pakuLehtiBtn = new Button ("Paku lehti");
+        gridAlgus.add(pakuLehtiBtn, 1,6);
+        final Text pakuURL = new Text();
+        gridAlgus.add(pakuURL, 1, 5, 2, 1);
+        pakuLehtiBtn.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                gridAlgus.add(pakutudLehtText, 1, 2, 2, 1);
-            }
-        });
-        HBox pakuVeelHbox = new HBox(10);
-        pakuVeelHbox.setAlignment(Pos.CENTER);
-        pakuVeelHbox.getChildren().add(pakuVeelBtn);
-        gridAlgus.add(pakuVeelHbox, 1,3);
+
+                String juhuslikUrl;
+                Connection c = null;
+                Statement stmt = null;
+                try {
+                    Class.forName("org.sqlite.JDBC");
+                    c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                    c.setAutoCommit(false);
+                    stmt = c.createStatement();
+                    ResultSet rs = stmt.executeQuery( "SELECT URL FROM DATABASE ORDER BY RANDOM() LIMIT 1;" );
+
+                    while ( rs.next() ) {
+                        String url = rs.getString("url");
+
+                        juhuslikUrl = "Vaata näiteks seda lehte: " + url;
+                        pakuURL.setText(juhuslikUrl);
+                    }
+                    rs.close();
+                    stmt.close();
+                    c.close();
+                } catch ( Exception e ) {
+                    System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+                    System.exit(0);
+                }
+
+                    }
+                });
 
 
         //button Seaded
@@ -80,25 +109,25 @@ public class Kasutajaliides extends Application{
         HBox seadedHbox = new HBox(10);
         seadedHbox.setAlignment(Pos.BOTTOM_LEFT);
         seadedHbox.getChildren().add(seadedBtn);
-        gridAlgus.add(seadedHbox, 1,5);
+        gridAlgus.add(seadedHbox, 1, 7);
 
 
 
-        //VAADE3: SEADETE JAOKS:
-        GridPane gridSeaded = new GridPane();
+
+
+        //VAADE2: SEADETE JAOKS:
         gridSeaded.setAlignment(Pos.CENTER);
         gridSeaded.setHgap(10);
         gridSeaded.setVgap(10);
         gridSeaded.setPadding(new Insets(25, 25, 25, 25));
-        groupSeaded.getChildren().addAll(gridSeaded);
 
         //tekst pais "seaded"
         Text seadedText = new Text ("Seaded");
-        gridSeaded.add(seadedText, 0, 2, 2, 1) ;
+        gridSeaded.add(seadedText, 1, 1, 2, 1) ;
 
         //tekst andmebaasi lehtedest "Minu veebilehed"
         Text minuVeebilehedText = new Text ("Minu veebilehed");
-        gridSeaded.add(minuVeebilehedText, 0, 3, 2, 1);
+        gridSeaded.add(minuVeebilehedText, 1, 3, 2, 1);
 
         //button kustuta
         Button kustutaBtn = new Button ("Kustuta");
@@ -110,7 +139,7 @@ public class Kasutajaliides extends Application{
         HBox kustutaHbox = new HBox(10);
         kustutaHbox.setAlignment(Pos.BOTTOM_RIGHT);
         kustutaHbox.getChildren().add(kustutaBtn);
-        gridSeaded.add(kustutaHbox, 4 , 4);
+        gridSeaded.add(kustutaHbox, 1 , 4);
 
         //veebilehe lisamiseks textbox
         TextField veebiLisamineTextField = new TextField();
@@ -118,16 +147,13 @@ public class Kasutajaliides extends Application{
 
         //veebilehe lisamiseks nupp
         Button lisaVeebilehtBtn = new Button ("Lisa");
-        final Text lisatudLehtText = new Text("http://www.delfi.ee");
-        pakuVeelBtn.setOnAction(new EventHandler<ActionEvent>() {
+        final Text lisatudLehtText = new Text("http://www.loto.ee");
+        lisaVeebilehtBtn.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                gridAlgus.add(lisatudLehtText, 1, 6, 2, 1);
+                gridSeaded.add(lisatudLehtText, 1, 6, 2, 1);
             }
         });
-        HBox lisaVeebilehtHbox = new HBox(10);
-        lisaVeebilehtHbox.setAlignment(Pos.CENTER);
-        lisaVeebilehtHbox.getChildren().add(lisaVeebilehtBtn);
-        gridSeaded.add(lisaVeebilehtHbox, 1,3);
+        gridSeaded.add(lisaVeebilehtBtn, 1,7);
 
         //button Algusesse
         Button algusesseBtn2 = new Button ("Algusesse");
@@ -135,19 +161,15 @@ public class Kasutajaliides extends Application{
             public void handle(ActionEvent event) {primaryStage.setScene(sceneAlgus);
             }
         });
-        HBox algusesse2Hbox = new HBox(10);
-        algusesse2Hbox.setAlignment(Pos.BOTTOM_RIGHT);
-        algusesse2Hbox.getChildren().add(algusesseBtn2);
-        gridSeaded.add(algusesse2Hbox, 4 , 5);
+        gridSeaded.add(algusesseBtn2, 1 , 8);
 
 
-        //VAADE4: Väljutud jaoks
-        GridPane gridValjutud = new GridPane();
+
+        //VAADE3: Väljutud jaoks
         gridValjutud.setAlignment(Pos.CENTER);
         gridValjutud.setHgap(10);
         gridValjutud.setVgap(10);
         gridValjutud.setPadding(new Insets(25, 25, 25, 25));
-        groupValjutud.getChildren().addAll(gridValjutud);
 
         //Kuva tekst "Rakendusest väljutud"
         //tekst pais "seaded"
