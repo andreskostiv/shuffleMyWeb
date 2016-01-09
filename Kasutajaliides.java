@@ -25,6 +25,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/*
+Antud rakendus pakub suvalises järjekorras veebilehe URLe. Rakendusse saab lisada ning kustutada lemmik veebilehti.
+Rrogramm suhtleb SQLite andmebaasiga shuffle2.db ning kasutab JavaFX kasutajaliidest.
+ */
 
 public class Kasutajaliides extends Application {
 
@@ -75,7 +79,7 @@ public class Kasutajaliides extends Application {
 
         final Hyperlink pakuURL = new Hyperlink();
         gridAlgus.add(pakuURL, 1, 5, 2, 1);
-
+        // kood mudetud, kuid templiit on siit: //http://www.tutorialspoint.com/sqlite/sqlite_java.html
         String juhuslikUrl;
         Connection c = null;
         Statement stmt = null;
@@ -117,6 +121,7 @@ public class Kasutajaliides extends Application {
             public void handle(ActionEvent event) {
 
                 String juhuslikUrl;
+                // kood mudetud, kuid templiit on siit: //http://www.tutorialspoint.com/sqlite/sqlite_java.html
                 Connection c = null;
                 Statement stmt = null;
                 try {
@@ -256,13 +261,13 @@ public class Kasutajaliides extends Application {
             System.exit(0);
         }
 
-
+        // Lisa veebileht nupule vajutamise tegevus
         lisaVeebilehtBtn.setOnAction(new EventHandler<ActionEvent>()
 
              {
                  public void handle(ActionEvent event) {
                      String urlBaasi = lisaURLTextField.getText();
-
+                     // kood mudetud, kuid templiit on siit: //http://www.tutorialspoint.com/sqlite/sqlite_java.html
                      Connection c = null;
                      Statement stmt = null;
                      try {
@@ -286,7 +291,7 @@ public class Kasutajaliides extends Application {
 
                      gridSeaded.getChildren().remove(tabel);
                      TableView tabel = new TableView();
-                     gridSeaded.add(tabel, 2, 3, 1, 10);
+                     gridSeaded.add(tabel, 2, 4, 1, 10);
 
 
                      ObservableList<ObservableList> data;
@@ -377,7 +382,7 @@ public class Kasutajaliides extends Application {
            {
                public void handle(ActionEvent event) {
                    String idKustuta = kustutaURLTextField.getText();
-
+                   // kood muudetud, kuid templiit on siit: //http://www.tutorialspoint.com/sqlite/sqlite_java.html
                    Connection c = null;
                    Statement stmt = null;
                    try {
@@ -400,7 +405,7 @@ public class Kasutajaliides extends Application {
                    // värskendab andmebaasi tabelit
                    gridSeaded.getChildren().remove(tabel);
                    TableView tabel = new TableView();
-                   gridSeaded.add(tabel, 2, 3, 1, 10);
+                   gridSeaded.add(tabel, 2, 4, 1, 10);
 
 
                    ObservableList<ObservableList> data;
@@ -414,7 +419,7 @@ public class Kasutajaliides extends Application {
                        stmt = c.createStatement();
                        ResultSet rs = stmt.executeQuery("SELECT rowid, url FROM DATABASE;");
 
-                       // Kood lisatud ja ise muudetudsiit:
+                       // Kood lisatud ja ise muudetud siit:
                        // http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/
                        /**********************************
                         * TABLE COLUMN ADDED DYNAMICALLY *
@@ -461,13 +466,9 @@ public class Kasutajaliides extends Application {
                        c.close();
                    } catch (Exception e) {
                        System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                       System.exit(0);
+                       //System.exit(0);
+
                    }
-
-
-
-
-
 
                }
            }
@@ -480,11 +481,11 @@ public class Kasutajaliides extends Application {
         Button algusesseBtn2 = new Button("Algusesse");
         algusesseBtn2.setOnAction(new EventHandler<ActionEvent>()
 
-                                  {
-                                      public void handle (ActionEvent event){
-                                          primaryStage.setScene(sceneAlgus);
-                                      }
-                                  }
+          {
+              public void handle (ActionEvent event){
+                  primaryStage.setScene(sceneAlgus);
+              }
+          }
 
         );
         gridSeaded.add(algusesseBtn2,0,13);

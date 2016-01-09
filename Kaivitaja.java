@@ -1,9 +1,15 @@
 package shuffleMyWeb;
 
-// See käivitab programmi
+
+
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+/*
+Antud rakendus pakub suvalises järjekorras veebilehe URLe. Rakendusse saab lisada ning kustutada lemmik veebilehti.
+Rrogramm suhtleb SQLite andmebaasiga shuffle2.db ning kasutab käsurealt kasutajaliidest.
+ */
 
 public class Kaivitaja extends Application  {
 
@@ -22,22 +28,3 @@ public class Kaivitaja extends Application  {
     }
 }
 
-/*
-import javafx.application.Application;
-import javafx.stage.Stage;
-
-import java.util.ArrayList;
-
-public class Ristmik extends Application {
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-        @Override
-        public void start (Stage primaryStage)throws Exception {
-            Foor foor = new Foor();
-        }
-    }
-
- */
