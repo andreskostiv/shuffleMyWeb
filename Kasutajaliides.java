@@ -43,9 +43,9 @@ public class Kasutajaliides extends Application {
         GridPane gridValjutud = new GridPane(); // Väljutud
 
         // Stseeni suuruse ja UI ruudustiku sidumine
-        final Scene sceneAlgus = new Scene(gridAlgus, 600, 500);
-        final Scene sceneSeaded = new Scene(gridSeaded, 600, 500);
-        final Scene sceneValjutud = new Scene(gridValjutud, 600, 500);
+        final Scene sceneAlgus = new Scene(gridAlgus, 700, 600);
+        final Scene sceneSeaded = new Scene(gridSeaded, 700, 600);
+        final Scene sceneValjutud = new Scene(gridValjutud, 700, 600);
 
 
         //VAADE1: ALGUSE JAOKS:
@@ -137,7 +137,7 @@ public class Kasutajaliides extends Application {
 
         //tekst pais "seaded"
         Text seadedText = new Text("Seaded");
-        gridSeaded.add(seadedText, 2, 1, 2, 1);
+        gridSeaded.add(seadedText, 1, 1, 2, 1);
 
         //tekst sisetamise juhend
         Text sisetamineText = new Text("Sisesta siia veeb kujul www..");
@@ -156,32 +156,32 @@ public class Kasutajaliides extends Application {
 
         lisaVeebilehtBtn.setOnAction(new EventHandler<ActionEvent>()
 
-             {
-                 public void handle(ActionEvent event) {
-                     String urlBaasi = lisaURLTextField.getText();
+                                     {
+                                         public void handle(ActionEvent event) {
+                                             String urlBaasi = lisaURLTextField.getText();
 
-                     Connection c = null;
-                     Statement stmt = null;
-                     try {
-                         Class.forName("org.sqlite.JDBC");
-                         c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
-                         c.setAutoCommit(false);
+                                             Connection c = null;
+                                             Statement stmt = null;
+                                             try {
+                                                 Class.forName("org.sqlite.JDBC");
+                                                 c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                                                 c.setAutoCommit(false);
 
-                         stmt = c.createStatement();
-                         String sql = "INSERT INTO DATABASE (URL) " +
-                                 "VALUES (" + "'http://" + urlBaasi + "'" + ")";
-                         stmt.executeUpdate(sql);
+                                                 stmt = c.createStatement();
+                                                 String sql = "INSERT INTO DATABASE (URL) " +
+                                                         "VALUES (" + "'http://" + urlBaasi + "'" + ")";
+                                                 stmt.executeUpdate(sql);
 
-                         stmt.close();
-                         c.commit();
-                         c.close();
-                     } catch (Exception e) {
-                         System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                         System.exit(0);
-                     }
-                     edukaltSisestatud.setText(urlBaasi + " lisatud");
-                 }
-             }
+                                                 stmt.close();
+                                                 c.commit();
+                                                 c.close();
+                                             } catch (Exception e) {
+                                                 System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                                                 System.exit(0);
+                                             }
+                                             edukaltSisestatud.setText(urlBaasi + " lisatud");
+                                         }
+                                     }
 
         );
 
@@ -190,16 +190,19 @@ public class Kasutajaliides extends Application {
         /*TableColumn idCol = new TableColumn();
         TableColumn urlCol = new TableColumn();
         tabel.getColumns().addAll(idCol,urlCol);*/
-        gridSeaded.add(tabel, 2, 3, 1, 10);
+        gridSeaded.add(tabel, 2, 4, 1, 10);
 
         // Ajutine nupp lehtede kuvamiseks tabelisse
-        Button naitaLehti = new Button("Näita lehti");
+        Button naitaLehti = new Button("Värskenda ja näita lehti andmebaasis");
         naitaLehti.setAlignment(Pos.CENTER_RIGHT);
         gridSeaded.add(naitaLehti, 2 ,2);
         // Kood siit võetud ja muudetud: http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/
         naitaLehti.setOnAction(new EventHandler<ActionEvent>()
            {
                public void handle (ActionEvent event){
+                    gridSeaded.getChildren().remove(tabel);
+                    TableView tabel = new TableView();
+                    gridSeaded.add(tabel, 2, 3, 1, 10);
 
 
                    Connection c = null;
@@ -258,18 +261,6 @@ public class Kasutajaliides extends Application {
 
                        }
 
-                       /*
-
-                       while ( rs.next() ) {
-
-                           String rowid = toString();
-                           rowid = rs.getString("rowid");
-                           String url = rs.getString("url");
-                           idCol.setText(rowid);
-                           urlCol.setText(url);
-
-                       }
-                    */
                        rs.close();
                        stmt.close();
                        c.close();
@@ -304,45 +295,43 @@ public class Kasutajaliides extends Application {
 
         kustutaBtn.setOnAction(new EventHandler<ActionEvent>()
 
-             {
-                 public void handle(ActionEvent event) {
-                     String idKustuta = kustutaURLTextField.getText();
+                               {
+                                   public void handle(ActionEvent event) {
+                                       String idKustuta = kustutaURLTextField.getText();
 
-                     Connection c = null;
-                     Statement stmt = null;
-                     try {
-                         Class.forName("org.sqlite.JDBC");
-                         c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
-                         c.setAutoCommit(false);
-                         System.out.println("Andmebaasiga edukalt ühendatud");
+                                       Connection c = null;
+                                       Statement stmt = null;
+                                       try {
+                                           Class.forName("org.sqlite.JDBC");
+                                           c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                                           c.setAutoCommit(false);
+                                           System.out.println("Andmebaasiga edukalt ühendatud");
 
-                         stmt = c.createStatement();
-                         String sql = "DELETE from DATABASE where rowid=" + idKustuta;
-                         stmt.executeUpdate(sql);
-                         c.commit();
+                                           stmt = c.createStatement();
+                                           String sql = "DELETE from DATABASE where rowid=" + idKustuta;
+                                           stmt.executeUpdate(sql);
+                                           c.commit();
 
                          /*ResultSet rs = stmt.executeQuery("SELECT rowid, url FROM DATABASE;");
                          while (rs.next()) {
                              String rowid = toString();
                              rowid = rs.getString("rowid");
                              String url = rs.getString("url");
-
                              System.out.println("ID = " + rowid);
                              System.out.println("NAME = " + url);
-
                              System.out.println();
                          }
                          rs.close();*/
-                         stmt.close();
-                         c.close();
+                                           stmt.close();
+                                           c.close();
 
-                     } catch (Exception e) {
-                         System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                         System.exit(0);
-                     }
-                     kustutatudText.setText("rowid "+ idKustuta + " kustutatud");
-                 }
-             }
+                                       } catch (Exception e) {
+                                           System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                                           System.exit(0);
+                                       }
+                                       kustutatudText.setText("rowid "+ idKustuta + " kustutatud");
+                                   }
+                               }
 
         );
 
@@ -352,11 +341,11 @@ public class Kasutajaliides extends Application {
         Button algusesseBtn2 = new Button("Algusesse");
         algusesseBtn2.setOnAction(new EventHandler<ActionEvent>()
 
-        {
-            public void handle (ActionEvent event){
-            primaryStage.setScene(sceneAlgus);
-        }
-        }
+                                  {
+                                      public void handle (ActionEvent event){
+                                          primaryStage.setScene(sceneAlgus);
+                                      }
+                                  }
 
         );
         gridSeaded.add(algusesseBtn2,0,13);
@@ -368,7 +357,7 @@ public class Kasutajaliides extends Application {
         gridValjutud.setVgap(10);
         gridValjutud.setPadding(new
 
-        Insets(25,25,25,25)
+                        Insets(25,25,25,25)
 
         );
 
@@ -381,4 +370,4 @@ public class Kasutajaliides extends Application {
         primaryStage.setScene(sceneAlgus);
         primaryStage.show();
     }
-    }
+}
