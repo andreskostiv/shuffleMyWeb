@@ -13,15 +13,15 @@ ANdres Kostiv ja Kaia Ernits (kuni Nov 2015)<br>
 Failid:<br>
 <br>
 1.2.1 Andmebaasiga seonduv<br>
-DbCreateTable.java Ühekordne main meetod andmebaasi loomiseks <br>
-shuffle2copy.db	andmebaasi sisunäide (ps. erilise kataloogisüsteemi tõttu OSX'is programm käivitub ainult tudengi arvutis)<br>
+https://github.com/andreskostiv/shuffleMyWeb/blob/master/DbCreateTable.java -  Ühekordne main meetod andmebaasi loomiseks <br>
+https://github.com/andreskostiv/shuffleMyWeb/blob/master/shuffle2copy.db%20 - SQLite andmebaasi sisunäide (ps. erilise kataloogisüsteemi tõttu Apple OSX'is programm käivitub ainult tudengi arvutis)<br>
 <br>
 1.2.2 Käsurealt kasutajaliidesega programmifalid (progetud Nov 2015):<br>
-Kaivitaja.java	-  main meetod objekt-orienteeritusega<br>
-Generaator.java	- programmi loogika kood ning Shuffle2.db andmebaasiga suhtlemise kood.<br>
+https://github.com/andreskostiv/shuffleMyWeb/blob/master/Kaivitaja.java	-  main meetod objekt-orienteeritusega<br>
+https://github.com/andreskostiv/shuffleMyWeb/blob/master/Generaator.java - programmi loogikakood ning Shuffle2.db andmebaasiga suhtlemise kood.<br>
 <br>
 1.2.3 Graafilise kasutajaliise programmifalid (programmeeritud Dets 2015 - Jan 2016:<br>
-Kasutajaliides.java - Main meetod ning programmi loogika kood ja Shuffle2.db andmebaasiga suhtlemise ning graafilise kasutajaliidese kood.<br>
+https://github.com/andreskostiv/shuffleMyWeb/blob/master/Kasutajaliides.java - Main meetod ning programmi loogika kood ja Shuffle2.db andmebaasiga suhtlemise ning graafilise kasutajaliidese kood.<br>
 <br>
 1.2.4 Olulisi välislinke mille koodi osaliselt lokaliseeriti:<br>
 Andmebaasi loomise, ridade lisamise ning kustutamise tutorialid:<br>
@@ -31,9 +31,9 @@ Andmebaasi kuvmine tabelina Javafx'is:<br>
 http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/<br>
 <br>
 <br>
-2.Taustamaterjal
+2.Taustamaterjal (Koostajad Andres Kostiv ja Kaia Ernits)
 
-2.1 Väga varajane UI prototüüp, vajuta slidhow play nuppu: https://docs.google.com/presentation/d/1s2zZeWre-DWCFE9bCOsMEi8besGLz21FatPfxao716Q/edit?usp=sharing<br>
+2.1 Väga varajane Graafilise kasutajaliidese  prototüüp Oktoobris, vajuta slidhow "play" nuppu: https://docs.google.com/presentation/d/1s2zZeWre-DWCFE9bCOsMEi8besGLz21FatPfxao716Q/edit?usp=sharing<br>
 
 2.2 UI prototüübist UML Prototüübi flow: :https://docs.google.com/presentation/d/1Wt5yPYKkdu7Ni_VkmDYtRmFmBmq3_DCf96rx_61Yd9c/edit?usp=sharing<br>
 <br>
