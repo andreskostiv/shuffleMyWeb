@@ -1,5 +1,13 @@
 package shuffleMyWeb;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.util.Callback;
+
+import javax.swing.text.TableView;
 import java.security.PublicKey;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,11 +19,11 @@ public class Andmebaas{
 
 // SQL Random veebileht Andmebaasist
 
-  Andmebaas(){
+  public Andmebaas(){
 
       /* SELECT column FROM table
       ORDER BY RANDOM()
-      LIMIT 1*/
+
 
       String juhuslikUrl;
       Connection c = null;
@@ -40,34 +48,8 @@ public class Andmebaas{
       } catch ( Exception e ) {
           System.err.println( e.getClass().getName() + ": " + e.getMessage() );
           System.exit(0);
-      }
-
+      }*/
   }
-
-    /*
-    public String time_to_string(long t) // time in milliseconds
-{
-    if (t < 0)
-    {
-        return "-";
-    }
-    else
-    {
-        int secs = (int)(t/1000);
-        int mins = secs/60;
-        secs = secs - (mins * 60);
-        return String.format("%d:%02d", mins, secs);
-    }
-}
-     */
-
-// SQL Veebilehe lisamine andmebaasi
-
-// SQL Veebilehtede aruanne andmebaasist, ajutine ID
-
-// SQL veebilehe kustutamine andmebaasiste ajutise ID abil
-
-
 
 
 }

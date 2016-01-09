@@ -16,16 +16,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
 
 public class Kasutajaliides extends Application {
 
@@ -61,12 +60,12 @@ public class Kasutajaliides extends Application {
                 primaryStage.setScene(sceneValjutud);
             }
         });
-        gridAlgus.add(valjuBtn, 1, 1);
+        gridAlgus.add(valjuBtn, 9, 0);
 
 
         //Tekst intro
         Text introText = new Text(" See rakendus pakub sulle suvalises järjekorras sinu " +
-                "lemmikutesse salvestatud veebilehti.");
+                "salvestatud veebilehti.");
         gridAlgus.add(introText, 1, 2, 2, 1);
 
 
@@ -76,6 +75,43 @@ public class Kasutajaliides extends Application {
 
         final Hyperlink pakuURL = new Hyperlink();
         gridAlgus.add(pakuURL, 1, 5, 2, 1);
+
+        String juhuslikUrl;
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+            c.setAutoCommit(false);
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT URL FROM DATABASE ORDER BY RANDOM() LIMIT 1;");
+
+            while (rs.next()) {
+                String url = rs.getString("url");
+
+                juhuslikUrl = url;
+                pakuURL.setText(juhuslikUrl);
+
+                pakuURL.setOnAction(new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent t) {
+                        getHostServices().showDocument(url);
+                    }
+                });
+
+                pakuLehtiBtn.setText("Paku veel lehti");
+
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+
+
 
         pakuLehtiBtn.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -148,137 +184,180 @@ public class Kasutajaliides extends Application {
         gridSeaded.add(lisaURLTextField,0,4,2,1);
 
         //veebilehe lisamiseks nupp ja tekst edukalt sisestatud
-        Button lisaVeebilehtBtn = new Button("Lisa andmebaasi.");
+        Button lisaVeebilehtBtn = new Button("Lisa andmebaasi");
         gridSeaded.add(lisaVeebilehtBtn,0,5);
 
         Text edukaltSisestatud = new Text();
         gridSeaded.add(edukaltSisestatud, 0, 6);
 
-        lisaVeebilehtBtn.setOnAction(new EventHandler<ActionEvent>()
-
-                                     {
-                                         public void handle(ActionEvent event) {
-                                             String urlBaasi = lisaURLTextField.getText();
-
-                                             Connection c = null;
-                                             Statement stmt = null;
-                                             try {
-                                                 Class.forName("org.sqlite.JDBC");
-                                                 c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
-                                                 c.setAutoCommit(false);
-
-                                                 stmt = c.createStatement();
-                                                 String sql = "INSERT INTO DATABASE (URL) " +
-                                                         "VALUES (" + "'http://" + urlBaasi + "'" + ")";
-                                                 stmt.executeUpdate(sql);
-
-                                                 stmt.close();
-                                                 c.commit();
-                                                 c.close();
-                                             } catch (Exception e) {
-                                                 System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                                                 System.exit(0);
-                                             }
-                                             edukaltSisestatud.setText(urlBaasi + " lisatud");
-                                         }
-                                     }
-
-        );
-
-        // Tebel, et kuvada lehti SQL baasist
+        // Tabel, et kuvada lehti SQL baasist
         TableView tabel = new TableView();
-        /*TableColumn idCol = new TableColumn();
-        TableColumn urlCol = new TableColumn();
-        tabel.getColumns().addAll(idCol,urlCol);*/
+
         gridSeaded.add(tabel, 2, 4, 1, 10);
 
-        // Ajutine nupp lehtede kuvamiseks tabelisse
-        Button naitaLehti = new Button("Värskenda ja näita lehti andmebaasis");
-        naitaLehti.setAlignment(Pos.CENTER_RIGHT);
-        gridSeaded.add(naitaLehti, 2 ,2);
-        // Kood siit võetud ja muudetud: http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/
-        naitaLehti.setOnAction(new EventHandler<ActionEvent>()
-           {
-               public void handle (ActionEvent event){
-                    gridSeaded.getChildren().remove(tabel);
-                    TableView tabel = new TableView();
-                    gridSeaded.add(tabel, 2, 3, 1, 10);
+        ObservableList<ObservableList> data;
+        data = FXCollections.observableArrayList();
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+            c.setAutoCommit(false);
+
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery( "SELECT rowid, url FROM DATABASE;" );
+
+            // Kood lisatud ja ise muudetudsiit:
+            // http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/
+            /**********************************
+             * TABLE COLUMN ADDED DYNAMICALLY *
+             **********************************/
+
+            for(int i=0 ; i<rs.getMetaData().getColumnCount(); i++){
+                //We are using non property style for making dynamic table
+                final int j = i;
+                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1));
+                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){
+
+                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+
+                        return new SimpleStringProperty(param.getValue().get(j).toString());
+                    }
+                });
+
+                tabel.getColumns().addAll(col);
+                System.out.println("Column ["+i+"] ");
+            }
+
+            /********************************
+             * Data added to ObservableList *
+             ********************************/
+            while(rs.next()){
+                //Iterate Row
+                ObservableList<String> row = FXCollections.observableArrayList();
+
+                for(int i=1 ; i<=rs.getMetaData().getColumnCount(); i++){
+                    //Iterate Column
+                    row.add(rs.getString(i));
+                }
+                System.out.println("Row [1] added "+row );
+                data.add(row);
+
+                //FINALLY ADDED TO TableView
+                tabel.setItems(data);
 
 
-                   Connection c = null;
-                   Statement stmt = null;
+            }
 
-                   ObservableList<ObservableList> data;
-                   data = FXCollections.observableArrayList();
-
-                   try {
-                       Class.forName("org.sqlite.JDBC");
-                       c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
-                       c.setAutoCommit(false);
-
-                       stmt = c.createStatement();
-                       ResultSet rs = stmt.executeQuery( "SELECT rowid, url FROM DATABASE;" );
-
-                       // Kood lisatud ja ise muudetudsiit:
-                       // http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/
-                       /**********************************
-                        * TABLE COLUMN ADDED DYNAMICALLY *
-                        **********************************/
-
-                       for(int i=0 ; i<rs.getMetaData().getColumnCount(); i++){
-                           //We are using non property style for making dynamic table
-                           final int j = i;
-                           TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1));
-                           col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){
-
-                               public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
-
-                                   return new SimpleStringProperty(param.getValue().get(j).toString());
-                               }
-                           });
-
-                           tabel.getColumns().addAll(col);
-                           System.out.println("Column ["+i+"] ");
-                       }
-
-                       /********************************
-                        * Data added to ObservableList *
-                        ********************************/
-                       while(rs.next()){
-                           //Iterate Row
-                           ObservableList<String> row = FXCollections.observableArrayList();
-
-                           for(int i=1 ; i<=rs.getMetaData().getColumnCount(); i++){
-                               //Iterate Column
-                               row.add(rs.getString(i));
-                           }
-                           System.out.println("Row [1] added "+row );
-                           data.add(row);
-
-                           //FINALLY ADDED TO TableView
-                           tabel.setItems(data);
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+        }
 
 
-                       }
+        lisaVeebilehtBtn.setOnAction(new EventHandler<ActionEvent>()
 
-                       rs.close();
-                       stmt.close();
-                       c.close();
-                   } catch ( Exception e ) {
-                       System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-                       System.exit(0);
-                   }
+             {
+                 public void handle(ActionEvent event) {
+                     String urlBaasi = lisaURLTextField.getText();
 
-               }
-           }
+                     Connection c = null;
+                     Statement stmt = null;
+                     try {
+                         Class.forName("org.sqlite.JDBC");
+                         c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                         c.setAutoCommit(false);
+
+                         stmt = c.createStatement();
+                         String sql = "INSERT INTO DATABASE (URL) " +
+                                 "VALUES (" + "'http://" + urlBaasi + "'" + ")";
+                         stmt.executeUpdate(sql);
+
+                         stmt.close();
+                         c.commit();
+                         c.close();
+                     } catch (Exception e) {
+                         System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                         System.exit(0);
+                     }
+                     edukaltSisestatud.setText(urlBaasi + " lisatud");
+
+                     gridSeaded.getChildren().remove(tabel);
+                     TableView tabel = new TableView();
+                     gridSeaded.add(tabel, 2, 3, 1, 10);
+
+
+                     ObservableList<ObservableList> data;
+                     data = FXCollections.observableArrayList();
+
+                     try {
+                         Class.forName("org.sqlite.JDBC");
+                         c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                         c.setAutoCommit(false);
+
+                         stmt = c.createStatement();
+                         ResultSet rs = stmt.executeQuery("SELECT rowid, url FROM DATABASE;");
+
+                         // Kood lisatud ja ise muudetudsiit:
+                         // http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/
+                         /**********************************
+                          * TABLE COLUMN ADDED DYNAMICALLY *
+                          **********************************/
+
+                         for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                             //We are using non property style for making dynamic table
+                             final int j = i;
+                             TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
+                             col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+
+                                 public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+
+                                     return new SimpleStringProperty(param.getValue().get(j).toString());
+                                 }
+                             });
+
+                             tabel.getColumns().addAll(col);
+                             System.out.println("Column [" + i + "] ");
+                         }
+
+                         /********************************
+                          * Data added to ObservableList *
+                          ********************************/
+                         while (rs.next()) {
+                             //Iterate Row
+                             ObservableList<String> row = FXCollections.observableArrayList();
+
+                             for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                                 //Iterate Column
+                                 row.add(rs.getString(i));
+                             }
+                             data.add(row);
+
+                             //FINALLY ADDED TO TableView
+                             tabel.setItems(data);
+
+
+                         }
+
+                         rs.close();
+                         stmt.close();
+                         c.close();
+                     } catch (Exception e) {
+                         System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                         System.exit(0);
+                     }
+
+
+                 }
+             }
 
         );
-
-
 
 
         //tekst kustutamise juhend
-        Text kustutamiseText = new Text("Kustutamiseks kirjuta RowID number:");
+        Text kustutamiseText = new Text("Kustutamiseks kirjuta rowid number:");
         gridSeaded.add(kustutamiseText, 0, 8, 2, 1);
 
         //veebilehe lisamiseks textbox
@@ -295,43 +374,103 @@ public class Kasutajaliides extends Application {
 
         kustutaBtn.setOnAction(new EventHandler<ActionEvent>()
 
-                               {
-                                   public void handle(ActionEvent event) {
-                                       String idKustuta = kustutaURLTextField.getText();
+           {
+               public void handle(ActionEvent event) {
+                   String idKustuta = kustutaURLTextField.getText();
 
-                                       Connection c = null;
-                                       Statement stmt = null;
-                                       try {
-                                           Class.forName("org.sqlite.JDBC");
-                                           c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
-                                           c.setAutoCommit(false);
-                                           System.out.println("Andmebaasiga edukalt ühendatud");
+                   Connection c = null;
+                   Statement stmt = null;
+                   try {
+                       Class.forName("org.sqlite.JDBC");
+                       c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                       c.setAutoCommit(false);
+                       System.out.println("Andmebaasiga edukalt ühendatud");
 
-                                           stmt = c.createStatement();
-                                           String sql = "DELETE from DATABASE where rowid=" + idKustuta;
-                                           stmt.executeUpdate(sql);
-                                           c.commit();
+                       stmt = c.createStatement();
+                       String sql = "DELETE from DATABASE where rowid=" + idKustuta;
+                       stmt.executeUpdate(sql);
+                       c.commit();
 
-                         /*ResultSet rs = stmt.executeQuery("SELECT rowid, url FROM DATABASE;");
-                         while (rs.next()) {
-                             String rowid = toString();
-                             rowid = rs.getString("rowid");
-                             String url = rs.getString("url");
-                             System.out.println("ID = " + rowid);
-                             System.out.println("NAME = " + url);
-                             System.out.println();
-                         }
-                         rs.close();*/
-                                           stmt.close();
-                                           c.close();
+                   } catch (Exception e) {
+                       System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                       System.exit(0);
+                   }
+                   kustutatudText.setText("rowid "+ idKustuta + " kustutatud");
 
-                                       } catch (Exception e) {
-                                           System.err.println(e.getClass().getName() + ": " + e.getMessage());
-                                           System.exit(0);
-                                       }
-                                       kustutatudText.setText("rowid "+ idKustuta + " kustutatud");
-                                   }
+                   // värskendab andmebaasi tabelit
+                   gridSeaded.getChildren().remove(tabel);
+                   TableView tabel = new TableView();
+                   gridSeaded.add(tabel, 2, 3, 1, 10);
+
+
+                   ObservableList<ObservableList> data;
+                   data = FXCollections.observableArrayList();
+
+                   try {
+                       Class.forName("org.sqlite.JDBC");
+                       c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                       c.setAutoCommit(false);
+
+                       stmt = c.createStatement();
+                       ResultSet rs = stmt.executeQuery("SELECT rowid, url FROM DATABASE;");
+
+                       // Kood lisatud ja ise muudetudsiit:
+                       // http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/
+                       /**********************************
+                        * TABLE COLUMN ADDED DYNAMICALLY *
+                        **********************************/
+
+                       for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                           //We are using non property style for making dynamic table
+                           final int j = i;
+                           TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
+                           col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+
+                               public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+
+                                   return new SimpleStringProperty(param.getValue().get(j).toString());
                                }
+                           });
+
+                           tabel.getColumns().addAll(col);
+                           System.out.println("Column [" + i + "] ");
+                       }
+
+                       /********************************
+                        * Data added to ObservableList *
+                        ********************************/
+                       while (rs.next()) {
+                           //Iterate Row
+                           ObservableList<String> row = FXCollections.observableArrayList();
+
+                           for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                               //Iterate Column
+                               row.add(rs.getString(i));
+                           }
+                           System.out.println("Row [1] added " + row);
+                           data.add(row);
+
+                           //FINALLY ADDED TO TableView
+                           tabel.setItems(data);
+
+
+                       }
+
+                       rs.close();
+                       stmt.close();
+                       c.close();
+                   } catch (Exception e) {
+                       System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                       System.exit(0);
+                   }
+
+
+
+
+
+
+               }
+           }
 
         );
 
@@ -363,6 +502,8 @@ public class Kasutajaliides extends Application {
 
         //Kuva tekst "Rakendusest väljutud"
         //tekst pais "seaded"
+
+
         Text valjutudText = new Text("Rakendustest väljutud.");
         gridValjutud.add(valjutudText,0,2,2,1);
 
