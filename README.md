@@ -1,6 +1,6 @@
 # shuffleMyWeb
 
-ANdres Kostiv ja Kaia Ernits (kuni Nov 2015)<br>
+Andres Kostiv ja Kaia Ernits (kuni Nov 2015)<br>
 <br>
 1 Projekti kokkuvõtte<br>
 <br>
