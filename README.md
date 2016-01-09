@@ -1,11 +1,22 @@
 # shuffleMyWeb
 
-ANdres kostiv ja Kaia Ernits
+ANdres Kostiv ja Kaia Ernits (kuni Nov 2015)
 
-DUMMY prototüüp:https://docs.google.com/presentation/d/1s2zZeWre-DWCFE9bCOsMEi8besGLz21FatPfxao716Q/edit?usp=sharing<br>
-UML PROTOTÜÜBI FLOW:https://docs.google.com/presentation/d/1Wt5yPYKkdu7Ni_VkmDYtRmFmBmq3_DCf96rx_61Yd9c/edit?usp=sharing<br>
-Projektiplaan:https://docs.google.com/spreadsheets/d/19jZUahf8eckD_sirkIReB5N4m-pyHF-FJQ-W3umz-lY/edit?usp=sharing<br>
+1 Projekti kokkuvõtte ja koodi komentaar
+
+1. Projekti skoop: Luua personaalne rakendus, mis pakub suvalises järjekorras veebilehe URLe. Rakendusse saab lisada ning kustutada veebilehti.
+2. 
+
+
+2.Taustamaterjal
+
+2.1 Väga varajane UI prototüüp, vajuta slidhow play nuppu: https://docs.google.com/presentation/d/1s2zZeWre-DWCFE9bCOsMEi8besGLz21FatPfxao716Q/edit?usp=sharing<br>
+
+2.2 UI prototüübist UML PROTOTÜÜBI FLOW :https://docs.google.com/presentation/d/1Wt5yPYKkdu7Ni_VkmDYtRmFmBmq3_DCf96rx_61Yd9c/edit?usp=sharing<br>
 <br>
+
+
+
 ALGORITM:<br>
 OBJEKT 1<br>
 1.	Valik, kas minna lehitsema, settingutesse või välja<br>
