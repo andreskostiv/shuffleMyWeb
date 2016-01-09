@@ -9,7 +9,10 @@ Andres Kostiv ja Kaia Ernits (kuni Nov 2015)<br>
 1.2 Failid ja selgitsued:<br>
 1.2.1 Github repo: https://github.com/andreskostiv/shuffleMyWeb?files=1<br>
 <br>
-1.2.2 Projekti käigus programmeeriti kaks projekti progemmeerimistööd. Üks progamm töötab käsurealt ja teine töötab JavaFX Graafilise kasutajaliidese peal. Mõlemad on sama skoobiga ja suhtlevad Shuffle2.db andmebaasiga.<br>
+1.2.2 Projekti käigus programmeeriti kaks projekti progemmeerimistööd. 
+- Üks progamm töötab käsurealt<br>
+- Teine töötab JavaFX Graafilise kasutajaliidese peal. <br>
+- Mõlemad on sama skoobiga ja suhtlevad Shuffle2.db andmebaasiga.<br>
 Failid:<br>
 <br>
 1.2.1 Andmebaasiga seonduv (sama andmebaasi kasutatakse paralleelselt mõlemas programmis) <br>
