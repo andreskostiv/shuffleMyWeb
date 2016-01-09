@@ -1,6 +1,10 @@
 package shuffleMyWeb;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -10,23 +14,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class Kasutajaliides extends Application{
+public class Kasutajaliides extends Application {
 
     public static void main(String[] args) {
         Application.launch(args);
     }
 
     @Override
-    public  void start(final Stage primaryStage){
+    public void start(final Stage primaryStage) {
         primaryStage.setTitle("ShuffleMyWeb");
 
         // UI ruudustikud, samad sõnad jätkuvad alam node'des
@@ -35,10 +43,9 @@ public class Kasutajaliides extends Application{
         GridPane gridValjutud = new GridPane(); // Väljutud
 
         // Stseeni suuruse ja UI ruudustiku sidumine
-        final Scene sceneAlgus = new Scene (gridAlgus, 600 , 500);
-        final Scene sceneSeaded = new Scene (gridSeaded, 600 , 500);
-        final Scene sceneValjutud = new Scene (gridValjutud, 600 , 500);
-
+        final Scene sceneAlgus = new Scene(gridAlgus, 600, 500);
+        final Scene sceneSeaded = new Scene(gridSeaded, 600, 500);
+        final Scene sceneValjutud = new Scene(gridValjutud, 600, 500);
 
 
         //VAADE1: ALGUSE JAOKS:
@@ -48,26 +55,24 @@ public class Kasutajaliides extends Application{
         gridAlgus.setPadding(new Insets(25, 25, 25, 25));
 
         //button Valju
-        Button valjuBtn = new Button ("Välju");
+        Button valjuBtn = new Button("Välju");
         valjuBtn.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {primaryStage.setScene(sceneValjutud);
+            public void handle(ActionEvent event) {
+                primaryStage.setScene(sceneValjutud);
             }
         });
-        HBox valjuHbox = new HBox(10);
-        valjuHbox.setAlignment(Pos.TOP_LEFT);
-        valjuHbox.getChildren().add(valjuBtn);
-        gridAlgus.add(valjuHbox, 1,0);
+        gridAlgus.add(valjuBtn, 1, 1);
 
 
         //Tekst intro
-        Text introText = new Text ( " See rakendus pakub sulle suvalises järjekorras sinu " +
+        Text introText = new Text(" See rakendus pakub sulle suvalises järjekorras sinu " +
                 "lemmikutesse salvestatud veebilehti.");
         gridAlgus.add(introText, 1, 2, 2, 1);
 
 
         //Nupp "Paku Lehti" ja all tekst URL
-        Button pakuLehtiBtn = new Button ("Paku lehti");
-        gridAlgus.add(pakuLehtiBtn, 1,6);
+        Button pakuLehtiBtn = new Button("Paku lehti");
+        gridAlgus.add(pakuLehtiBtn, 1, 6);
 
         final Hyperlink pakuURL = new Hyperlink();
         gridAlgus.add(pakuURL, 1, 5, 2, 1);
@@ -83,9 +88,9 @@ public class Kasutajaliides extends Application{
                     c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
                     c.setAutoCommit(false);
                     stmt = c.createStatement();
-                    ResultSet rs = stmt.executeQuery( "SELECT URL FROM DATABASE ORDER BY RANDOM() LIMIT 1;" );
+                    ResultSet rs = stmt.executeQuery("SELECT URL FROM DATABASE ORDER BY RANDOM() LIMIT 1;");
 
-                    while ( rs.next() ) {
+                    while (rs.next()) {
                         String url = rs.getString("url");
 
                         juhuslikUrl = url;
@@ -105,28 +110,23 @@ public class Kasutajaliides extends Application{
                     rs.close();
                     stmt.close();
                     c.close();
-                } catch ( Exception e ) {
-                    System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+                } catch (Exception e) {
+                    System.err.println(e.getClass().getName() + ": " + e.getMessage());
                     System.exit(0);
                 }
 
-                    }
-                });
+            }
+        });
 
 
         //button Seaded
-        Button seadedBtn = new Button ("Seaded");
+        Button seadedBtn = new Button("Seaded");
         seadedBtn.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {primaryStage.setScene(sceneSeaded);
+            public void handle(ActionEvent event) {
+                primaryStage.setScene(sceneSeaded);
             }
         });
-        HBox seadedHbox = new HBox(10);
-        seadedHbox.setAlignment(Pos.BOTTOM_LEFT);
-        seadedHbox.getChildren().add(seadedBtn);
-        gridAlgus.add(seadedHbox, 1, 7);
-
-
-
+        gridAlgus.add(seadedBtn, 1, 13);
 
 
         //VAADE2: SEADETE JAOKS:
@@ -136,63 +136,249 @@ public class Kasutajaliides extends Application{
         gridSeaded.setPadding(new Insets(25, 25, 25, 25));
 
         //tekst pais "seaded"
-        Text seadedText = new Text ("Seaded");
-        gridSeaded.add(seadedText, 1, 1, 2, 1) ;
+        Text seadedText = new Text("Seaded");
+        gridSeaded.add(seadedText, 2, 1, 2, 1);
 
-        //tekst andmebaasi lehtedest "Minu veebilehed"
-        Text minuVeebilehedText = new Text ("Minu veebilehed");
-        gridSeaded.add(minuVeebilehedText, 1, 3, 2, 1);
-
-        //button kustuta
-        Button kustutaBtn = new Button ("Kustuta");
-        kustutaBtn.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                // kustutus tegevus ja uue pildi kuvamine loop?
-            }
-        });
-        HBox kustutaHbox = new HBox(10);
-        kustutaHbox.setAlignment(Pos.BOTTOM_RIGHT);
-        kustutaHbox.getChildren().add(kustutaBtn);
-        gridSeaded.add(kustutaHbox, 1 , 4);
+        //tekst sisetamise juhend
+        Text sisetamineText = new Text("Sisesta siia veeb kujul www..");
+        gridSeaded.add(sisetamineText, 0, 3, 2, 1);
 
         //veebilehe lisamiseks textbox
-        TextField veebiLisamineTextField = new TextField();
-        gridSeaded.add(veebiLisamineTextField, 1, 5);
+        TextField lisaURLTextField = new TextField();
+        gridSeaded.add(lisaURLTextField,0,4,2,1);
 
-        //veebilehe lisamiseks nupp
-        Button lisaVeebilehtBtn = new Button ("Lisa");
-        final Text lisatudLehtText = new Text("http://www.loto.ee");
-        lisaVeebilehtBtn.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                gridSeaded.add(lisatudLehtText, 1, 6, 2, 1);
-            }
-        });
-        gridSeaded.add(lisaVeebilehtBtn, 1,7);
+        //veebilehe lisamiseks nupp ja tekst edukalt sisestatud
+        Button lisaVeebilehtBtn = new Button("Lisa andmebaasi.");
+        gridSeaded.add(lisaVeebilehtBtn,0,5);
+
+        Text edukaltSisestatud = new Text();
+        gridSeaded.add(edukaltSisestatud, 0, 6);
+
+        lisaVeebilehtBtn.setOnAction(new EventHandler<ActionEvent>()
+
+             {
+                 public void handle(ActionEvent event) {
+                     String urlBaasi = lisaURLTextField.getText();
+
+                     Connection c = null;
+                     Statement stmt = null;
+                     try {
+                         Class.forName("org.sqlite.JDBC");
+                         c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                         c.setAutoCommit(false);
+
+                         stmt = c.createStatement();
+                         String sql = "INSERT INTO DATABASE (URL) " +
+                                 "VALUES (" + "'http://" + urlBaasi + "'" + ")";
+                         stmt.executeUpdate(sql);
+
+                         stmt.close();
+                         c.commit();
+                         c.close();
+                     } catch (Exception e) {
+                         System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                         System.exit(0);
+                     }
+                     edukaltSisestatud.setText(urlBaasi + " lisatud");
+                 }
+             }
+
+        );
+
+        // Tebel, et kuvada lehti SQL baasist
+        TableView tabel = new TableView();
+        /*TableColumn idCol = new TableColumn();
+        TableColumn urlCol = new TableColumn();
+        tabel.getColumns().addAll(idCol,urlCol);*/
+        gridSeaded.add(tabel, 2, 3, 1, 10);
+
+        // Ajutine nupp lehtede kuvamiseks tabelisse
+        Button naitaLehti = new Button("Näita lehti");
+        naitaLehti.setAlignment(Pos.CENTER_RIGHT);
+        gridSeaded.add(naitaLehti, 2 ,2);
+        // Kood siit võetud ja muudetud: http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/
+        naitaLehti.setOnAction(new EventHandler<ActionEvent>()
+           {
+               public void handle (ActionEvent event){
+
+
+                   Connection c = null;
+                   Statement stmt = null;
+
+                   ObservableList<ObservableList> data;
+                   data = FXCollections.observableArrayList();
+
+                   try {
+                       Class.forName("org.sqlite.JDBC");
+                       c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                       c.setAutoCommit(false);
+
+                       stmt = c.createStatement();
+                       ResultSet rs = stmt.executeQuery( "SELECT rowid, url FROM DATABASE;" );
+
+                       // Kood lisatud ja ise muudetudsiit:
+                       // http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/
+                       /**********************************
+                        * TABLE COLUMN ADDED DYNAMICALLY *
+                        **********************************/
+
+                       for(int i=0 ; i<rs.getMetaData().getColumnCount(); i++){
+                           //We are using non property style for making dynamic table
+                           final int j = i;
+                           TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i+1));
+                           col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){
+
+                               public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+
+                                   return new SimpleStringProperty(param.getValue().get(j).toString());
+                               }
+                           });
+
+                           tabel.getColumns().addAll(col);
+                           System.out.println("Column ["+i+"] ");
+                       }
+
+                       /********************************
+                        * Data added to ObservableList *
+                        ********************************/
+                       while(rs.next()){
+                           //Iterate Row
+                           ObservableList<String> row = FXCollections.observableArrayList();
+
+                           for(int i=1 ; i<=rs.getMetaData().getColumnCount(); i++){
+                               //Iterate Column
+                               row.add(rs.getString(i));
+                           }
+                           System.out.println("Row [1] added "+row );
+                           data.add(row);
+
+                           //FINALLY ADDED TO TableView
+                           tabel.setItems(data);
+
+
+                       }
+
+                       /*
+
+                       while ( rs.next() ) {
+
+                           String rowid = toString();
+                           rowid = rs.getString("rowid");
+                           String url = rs.getString("url");
+                           idCol.setText(rowid);
+                           urlCol.setText(url);
+
+                       }
+                    */
+                       rs.close();
+                       stmt.close();
+                       c.close();
+                   } catch ( Exception e ) {
+                       System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+                       System.exit(0);
+                   }
+
+               }
+           }
+
+        );
+
+
+
+
+        //tekst kustutamise juhend
+        Text kustutamiseText = new Text("Kustutamiseks kirjuta RowID number:");
+        gridSeaded.add(kustutamiseText, 0, 8, 2, 1);
+
+        //veebilehe lisamiseks textbox
+        TextField kustutaURLTextField = new TextField();
+        gridSeaded.add(kustutaURLTextField,0,9,1,1);
+
+        //button kustuta ja tagasisidetekst edukast kustutamisest
+        Button kustutaBtn = new Button("Kustuta");
+        gridSeaded.add(kustutaBtn,0,10,1,1);
+
+        Text kustutatudText = new Text();
+        gridSeaded.add(kustutatudText, 0, 11, 1, 1);
+
+
+        kustutaBtn.setOnAction(new EventHandler<ActionEvent>()
+
+             {
+                 public void handle(ActionEvent event) {
+                     String idKustuta = kustutaURLTextField.getText();
+
+                     Connection c = null;
+                     Statement stmt = null;
+                     try {
+                         Class.forName("org.sqlite.JDBC");
+                         c = DriverManager.getConnection("jdbc:sqlite:shuffle2.db");
+                         c.setAutoCommit(false);
+                         System.out.println("Andmebaasiga edukalt ühendatud");
+
+                         stmt = c.createStatement();
+                         String sql = "DELETE from DATABASE where rowid=" + idKustuta;
+                         stmt.executeUpdate(sql);
+                         c.commit();
+
+                         /*ResultSet rs = stmt.executeQuery("SELECT rowid, url FROM DATABASE;");
+                         while (rs.next()) {
+                             String rowid = toString();
+                             rowid = rs.getString("rowid");
+                             String url = rs.getString("url");
+
+                             System.out.println("ID = " + rowid);
+                             System.out.println("NAME = " + url);
+
+                             System.out.println();
+                         }
+                         rs.close();*/
+                         stmt.close();
+                         c.close();
+
+                     } catch (Exception e) {
+                         System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                         System.exit(0);
+                     }
+                     kustutatudText.setText("rowid "+ idKustuta + " kustutatud");
+                 }
+             }
+
+        );
+
+
 
         //button Algusesse
-        Button algusesseBtn2 = new Button ("Algusesse");
-        algusesseBtn2.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {primaryStage.setScene(sceneAlgus);
-            }
-        });
-        gridSeaded.add(algusesseBtn2, 1 , 8);
+        Button algusesseBtn2 = new Button("Algusesse");
+        algusesseBtn2.setOnAction(new EventHandler<ActionEvent>()
 
+        {
+            public void handle (ActionEvent event){
+            primaryStage.setScene(sceneAlgus);
+        }
+        }
+
+        );
+        gridSeaded.add(algusesseBtn2,0,13);
 
 
         //VAADE3: Väljutud jaoks
         gridValjutud.setAlignment(Pos.CENTER);
         gridValjutud.setHgap(10);
         gridValjutud.setVgap(10);
-        gridValjutud.setPadding(new Insets(25, 25, 25, 25));
+        gridValjutud.setPadding(new
+
+        Insets(25,25,25,25)
+
+        );
 
         //Kuva tekst "Rakendusest väljutud"
         //tekst pais "seaded"
-        Text valjutudText = new Text ("Rakendustest väljutud.");
-        gridValjutud.add(valjutudText, 0, 2, 2, 1) ;
-
+        Text valjutudText = new Text("Rakendustest väljutud.");
+        gridValjutud.add(valjutudText,0,2,2,1);
 
 
         primaryStage.setScene(sceneAlgus);
         primaryStage.show();
     }
-}
+    }
