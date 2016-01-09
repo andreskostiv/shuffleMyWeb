@@ -4,23 +4,23 @@ ANdres Kostiv ja Kaia Ernits (kuni Nov 2015)<br>
 <br>
 1 Projekti kokkuvõtte<br>
 <br>
-1.1 Projekti skoop: Luua personaalne rakendus, mis pakub suvalises järjekorras veebilehe URLe. Rakendusse saab lisada ning kustutada veebilehti.<br>
+1.1 Projekti skoop: Luua personaalne rakendus, mis pakub suvalises järjekorras veebilehe URLe. Rakendusse saab lisada ning kustutada lemmik veebilehti.<br>
 <br>
 1.2 Failid ja selgitsued:<br>
 1.2.1 Github repo: https://github.com/andreskostiv/shuffleMyWeb?files=1<br>
 <br>
-1.2.2 Projekti käigus programmeeriti kaks projekti progemistööd. Üks töötab käsurealt ja teine töötab JavaFX Graafilise kasutajaliidese peal. Mõlemad on sama skoobiga ja suhtlevad Shuffle2.db andmebaasiga.<br>
+1.2.2 Projekti käigus programmeeriti kaks projekti progemmeerimistööd. Üks progamm töötab käsurealt ja teine töötab JavaFX Graafilise kasutajaliidese peal. Mõlemad on sama skoobiga ja suhtlevad Shuffle2.db andmebaasiga.<br>
 Failid:<br>
 <br>
-1.2.1 Andmebaasiga seonduv<br>
+1.2.1 Andmebaasiga seonduv (sama andmebaasi kasutatakse paralleelselt mõlemas programmis) <br>
 https://github.com/andreskostiv/shuffleMyWeb/blob/master/DbCreateTable.java -  Ühekordne main meetod andmebaasi loomiseks <br>
 https://github.com/andreskostiv/shuffleMyWeb/blob/master/shuffle2copy.db%20 - SQLite andmebaasi sisunäide (ps. erilise kataloogisüsteemi tõttu Apple OSX'is programm käivitub ainult tudengi arvutis)<br>
 <br>
-1.2.2 Käsurealt kasutajaliidesega programmifalid (progetud Nov 2015):<br>
+1.2.2 Käsurealt kasutajaliidesega programmifalid (programmeeritud Nov 2015):<br>
 https://github.com/andreskostiv/shuffleMyWeb/blob/master/Kaivitaja.java	-  main meetod objekt-orienteeritusega<br>
 https://github.com/andreskostiv/shuffleMyWeb/blob/master/Generaator.java - programmi loogikakood ning Shuffle2.db andmebaasiga suhtlemise kood.<br>
 <br>
-1.2.3 Graafilise kasutajaliise programmifalid (programmeeritud Dets 2015 - Jan 2016:<br>
+1.2.3 Graafilise kasutajaliise programmifalid (programmeeritud Dets 2015) - Jan 2016:<br>
 https://github.com/andreskostiv/shuffleMyWeb/blob/master/Kasutajaliides.java - Main meetod ning programmi loogika kood ja Shuffle2.db andmebaasiga suhtlemise ning graafilise kasutajaliidese kood.<br>
 <br>
 1.2.4 Olulisi välislinke mille koodi osaliselt lokaliseeriti:<br>
@@ -68,4 +68,4 @@ OBJEKT 2<br>
         2.3.2 Liigub algusesse vaatesse 1.<br>
         2.4 Tühista ja algusesse. Ei salvesta andmebaasi muudatusi ja liigub vaatesse 1.<br>
         <br>
-
+        ReadME lõpp<br>
