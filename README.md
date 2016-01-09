@@ -34,6 +34,7 @@ Andmebaasi kuvmine tabelina Javafx'is:<br>
 http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/comment-page-2/<br>
 <br>
 <br>
+
 2.Taustamaterjal (Koostajad Andres Kostiv ja Kaia Ernits)
 
 2.1 Väga varajane Graafilise kasutajaliidese  prototüüp Oktoobris, vajuta slidhow "play" nuppu: https://docs.google.com/presentation/d/1s2zZeWre-DWCFE9bCOsMEi8besGLz21FatPfxao716Q/edit?usp=sharing<br>
