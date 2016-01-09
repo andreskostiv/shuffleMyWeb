@@ -37,7 +37,7 @@ http://blog.ngopal.com.np/2011/10/19/dyanmic-tableview-data-from-database/commen
 
 2.Taustamaterjal (Koostajad Andres Kostiv ja Kaia Ernits)
 
-2.1 Väga varajane Graafilise kasutajaliidese  prototüüp Oktoobris, vajuta slidhow "play" nuppu: https://docs.google.com/presentation/d/1s2zZeWre-DWCFE9bCOsMEi8besGLz21FatPfxao716Q/edit?usp=sharing<br>
+2.1 Väga varajane Graafilise kasutajaliidese  prototüüp Oktoobris, vajuta paremal üleval "Present" nuppu: https://docs.google.com/presentation/d/1s2zZeWre-DWCFE9bCOsMEi8besGLz21FatPfxao716Q/edit?usp=sharing<br>
 
 2.2 UI prototüübist UML Prototüübi flow: :https://docs.google.com/presentation/d/1Wt5yPYKkdu7Ni_VkmDYtRmFmBmq3_DCf96rx_61Yd9c/edit?usp=sharing<br>
 <br>
