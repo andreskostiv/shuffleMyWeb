@@ -4,7 +4,7 @@ Andres Kostiv ja Kaia Ernits (kuni Nov 2015)<br>
 <br>
 1 Projekti kokkuvõtte<br>
 <br>
-1.1 Projekti skoop: Luua personaalne rakendus, mis pakub suvalises järjekorras veebilehe URLe. Rakendusse saab lisada ning kustutada lemmik veebilehti.<br>
+1.1 Projekti skoop: Luua personaalne rakendus, mis pakub suvalises järjekorras veebilehe URLe. Rakendusse saab lisada ning kustutada lemmik veebilehti. Rakendust näeb siin Youtube Videos https://youtu.be/st20v48PDNQ<br>
 <br>
 1.2 Failid ja selgitsued:<br>
 1.2.1 Github repo: https://github.com/andreskostiv/shuffleMyWeb?files=1<br>
